@@ -1,0 +1,72 @@
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class SavingsAccountGUI extends JFrame
+{
+    private JTextField initialDepositField;
+    private JTextField annualInterestRateField;
+    private JTextField numberOfYearsField;
+    private JButton calculateButton;
+    private JLabel balanceLabel;
+
+    
+    public SavingsAccountGUI()
+    {
+       super("Savings Account Calculator");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new GridLayout(5, 2, 5, 5)); // 5 rows, 2 columns, with padding
+
+        add(new JLabel("Initial Deposit:"));
+        initialDepositField = new JTextField();
+        add(initialDepositField);
+
+        add(new JLabel("Annual Interest Rate (%):"));
+        annualInterestRateField = new JTextField();
+        add(annualInterestRateField);
+
+        add(new JLabel("Number of Years:"));
+        numberOfYearsField = new JTextField();
+        add(numberOfYearsField);
+
+        calculateButton = new JButton("Calculate");
+        calculateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                calculateBalance();
+            }
+        });
+        add(calculateButton);
+
+        balanceLabel = new JLabel("Balance: ");
+        add(balanceLabel);
+
+        setSize(400, 200); // Adjust the frame's width and height
+        setVisible(true);
+    }
+
+    private void calculateBalance() {
+        try {
+            double initialDeposit = Double.parseDouble(initialDepositField.getText());
+            double annualInterestRate = Double.parseDouble(annualInterestRateField.getText());
+            int numberOfYears = Integer.parseInt(numberOfYearsField.getText());
+
+            BankAccount account = new BankAccount(initialDeposit);
+            account.applyInterest(annualInterestRate, numberOfYears);
+
+            balanceLabel.setText(String.format("Balance: %.2f", account.getBalance()));
+        } catch (NumberFormatException ex) {
+            balanceLabel.setText("Error: Invalid number format.");
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new SavingsAccountGUI();
+            }
+        });
+    }
+}
